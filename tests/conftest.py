@@ -1,35 +1,46 @@
-"""Configuration for pytest."""
+"""Test configuration and shared fixtures."""
 
 import os
 import sys
+import tempfile
+from pathlib import Path
+
 import pytest
-import tensorflow as tf
+from flask import Flask
 
 # Add project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-@pytest.fixture(scope="session")
-def tf_session():
-    """Create a TensorFlow session for testing.
+from ipa2wav.tts_model.synthesize import app as flask_app
+from ipa2wav.tts_model.hyperparams import Hyperparams as hp
+
+
+@pytest.fixture
+def app():
+    """Create Flask application for testing."""
+    # Configure app for testing
+    flask_app.config.update({
+        'TESTING': True,
+        'JSON_AS_ASCII': False
+    })
     
-    This session is shared across all tests in a session to avoid
-    creating multiple sessions.
-    """
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True
-    sess = tf.Session(config=config)
-    yield sess
-    sess.close()
+    # Create temporary directory for audio outputs
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        hp.sampledir = tmp_dir
+        yield flask_app
 
-@pytest.fixture(scope="session")
-def sample_vocab():
-    """Create a sample vocabulary for testing."""
-    return "PE sxʃuɒhpjgm̃wŋaɛɪðnzʊbvlɑətirʒɜækʌθɔfId"
 
-@pytest.fixture(scope="session")
-def sample_text():
-    """Create sample IPA text for testing."""
-    return "həˈləʊ ˈwɜːld"  # "hello world" in IPA
+@pytest.fixture
+def client(app):
+    """Create Flask test client."""
+    return app.test_client()
+
+
+@pytest.fixture
+def runner(app):
+    """Create Flask CLI test runner."""
+    return app.test_cli_runner()
+
 
 @pytest.fixture(scope="session")
 def test_data_dir(tmp_path_factory):

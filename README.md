@@ -1,7 +1,5 @@
 # IPA2WAV Synthesis Framework
 
-> **⚠️ DISCLAIMER:** This implementation uses TensorFlow 1.8 and is now outdated. For an updated PyTorch implementation, please check the `pytorch_implementation` branch.
-
 A deep learning-based text-to-speech synthesis system that converts International Phonetic Alphabet (IPA) symbols to speech. This implementation is inspired by the paper [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Networks with Guided Attention](https://arxiv.org/abs/1710.08969), but extends it to work with IPA symbols instead of raw text.
 
 ## Project Overview
@@ -17,139 +15,58 @@ This project implements a novel approach to speech synthesis by:
 ## Project Structure
 
 ```
-thesis_work/
-├── data/                      # Data directory
-│   ├── raw/                  # Original dataset files
-│   ├── processed/            # Preprocessed data
-│   ├── external/             # External data sources
-│   ├── LJSpeech-1.1/        # LJSpeech dataset
-│   ├── cmu_us_arctic/       # CMU Arctic dataset
-│   └── text_to_phone_IPA.py # IPA conversion script
-├── src/                      # Source code
-│   ├── data_processing/     # Data processing scripts
-│   ├── features/            # Feature extraction
-│   ├── tts_model/          # TTS model implementation
-│   ├── evaluation/         # Model evaluation scripts
-│   ├── visualization/      # Visualization tools
-│   └── utils/              # Utility functions
-├── notebooks/               # Jupyter notebooks for analysis
-├── results/                 # Output directory
-│   ├── figures/             # Generated plots
-│   ├── models/              # Saved model checkpoints
-│   └── logs/                # Training logs
+ipa2wav/
+├── data/                    # Data directory containing datasets and processing scripts
 ├── docs/                    # Documentation
-│   ├── papers/             # Related research papers
-│   └── thesis/             # Thesis documents
-└── tests/                  # Unit tests
+├── ipa2wav/                # Main package directory
+├── models/                 # Saved model checkpoints
+├── notebooks/             # Jupyter notebooks for analysis
+├── samples_IPA_22050/     # Generated speech samples
+├── tests/                 # Unit tests
+├── poetry.lock           # Poetry lock file with exact dependency versions
+└── pyproject.toml        # Poetry project configuration and dependencies
 ```
 
 ## Installation
 
-IPA2WAV can be installed in several ways depending on your needs:
+IPA2WAV uses Poetry for dependency management. Here's how to get started:
 
-### 1. Development Installation (Recommended for Contributors)
+### 1. Prerequisites
 
-Clone the repository and install in development mode with all dependencies:
+- Python 3.8 or higher
+- [Poetry](https://python-poetry.org/docs/#installation)
 
-```bash
-# Clone the repository
-git clone https://github.com/moitreebasu1990/ipa2wav.git
-cd ipa2wav
-
-# Create and activate a virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install in development mode with all dependencies
-pip install -e ".[dev,test]"  # Install with both dev and test dependencies
-# OR
-pip install -e ".[dev]"       # Install with only dev dependencies
-# OR
-pip install -e ".[test]"      # Install with only test dependencies
-```
-
-### 2. Regular Installation
-
-Install the latest stable version with core dependencies only:
-
-```bash
-pip install git+https://github.com/moitreebasu1990/ipa2wav.git
-```
-
-### 3. Manual Installation
-
-Install from source with specific dependency sets:
+### 2. Installation Steps
 
 ```bash
 # Clone the repository
-git clone https://github.com/moitreebasu1990/ipa2wav.git
+git clone https://github.com/yourusername/ipa2wav.git
 cd ipa2wav
 
-# Install core package
-pip install .                 # Install core package only
-# OR
-pip install ".[dev]"         # Install with development tools
-# OR
-pip install ".[test]"        # Install with test dependencies
-# OR
-pip install ".[dev,test]"    # Install with all dependencies
+# Install dependencies using Poetry
+poetry install
+
+# Activate the virtual environment
+poetry shell
 ```
 
-### Available Dependency Sets
+### Available Dependencies
 
-1. Core Dependencies (installed by default):
-   - numpy>=1.19.0
-   - tensorflow>=1.8.0
-   - librosa>=0.8.0
-   - tqdm>=4.50.0
-   - matplotlib>=3.3.0
-   - scipy>=1.5.0
-   - soundfile>=0.10.0
-   - tensorboard>=2.4.0
-
-2. Development Dependencies (`[dev]`):
-   - black (code formatting)
-   - flake8 (code linting)
-   - isort (import sorting)
-   - sphinx (documentation)
-   - sphinx-rtd-theme (documentation theme)
-
-3. Test Dependencies (`[test]`):
-   - pytest>=6.0.0
-   - pytest-cov (test coverage)
-   - pesq (speech quality metric)
-   - pystoi (speech intelligibility)
-   - psutil (system monitoring)
-
-### Command-Line Tools
-
-After installation, the following commands become available:
-
-```bash
-# Preprocess data
-ipa2wav-preprocess --dataset [dataset_name]
-
-# Train the model
-ipa2wav-train --stage 1  # Train Text2Mel network
-ipa2wav-train --stage 2  # Train SSRN network
-
-# Synthesize speech
-ipa2wav-synthesize --text "[IPA_TEXT]" --out_file "output.wav"
-```
+All dependencies are managed through `pyproject.toml`. The main dependencies include:
+- Core ML libraries (TensorFlow, etc.)
+- Audio processing (librosa, soundfile)
+- Development tools (pytest, black, etc.)
 
 ### Verifying Installation
 
 To verify your installation:
 
 ```bash
-# Check if package is installed
-pip show ipa2wav
-
-# Try importing the package
-python -c "import ipa2wav; print(ipa2wav.__version__)"
+# Activate poetry environment if not already active
+poetry shell
 
 # Run tests
-pytest tests/
+poetry run pytest
 ```
 
 ## Dataset Preparation
@@ -163,7 +80,7 @@ pytest tests/
 1. Download the desired dataset to `data/raw/`
 2. Run preprocessing script:
 ```bash
-python src/data_processing/prepro.py --dataset [dataset_name]
+poetry run python src/data_processing/prepro.py --dataset [dataset_name]
 ```
 3. Processed data will be saved in `data/processed/`
 
@@ -173,12 +90,12 @@ The training process is split into two parallel stages:
 
 ### Stage 1: Text2Mel Training
 ```bash
-python src/tts_model/train.py --stage 1
+poetry run python src/tts_model/train.py --stage 1
 ```
 
 ### Stage 2: SSRN Training
 ```bash
-python src/tts_model/train.py --stage 2
+poetry run python src/tts_model/train.py --stage 2
 ```
 
 Training progress and model checkpoints will be saved in `results/`.
@@ -234,9 +151,10 @@ The project includes comprehensive evaluation tools to assess various aspects of
 
 ### Running Evaluation
 
-1. Install test dependencies:
+1. All dependencies are already included in Poetry:
 ```bash
-pip install -r tests/requirements-test.txt
+# Make sure you're in the Poetry shell
+poetry shell
 ```
 
 2. Prepare test data:
@@ -246,7 +164,7 @@ pip install -r tests/requirements-test.txt
 
 3. Run evaluation:
 ```bash
-python tests/evaluate.py
+poetry run python tests/evaluate.py
 ```
 
 4. View results:
@@ -276,7 +194,7 @@ python tests/evaluate.py
 
 To synthesize speech from IPA text:
 ```bash
-python src/tts_model/synthesize.py --text "[IPA_TEXT]" --out_file "output.wav"
+poetry run python -m ipa2wav.synthesize --text "[IPA_TEXT]" --out_file "output.wav"
 ```
 
 ## Results
@@ -290,9 +208,18 @@ Training logs and visualizations can be found in `results/`:
 
 1. Fork the repository
 2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
+3. Set up development environment:
+```bash
+# Install dependencies including development ones
+poetry install
+# Activate virtual environment
+poetry shell
+# Run tests to ensure everything works
+poetry run pytest
+```
+4. Commit your changes
+5. Push to the branch
+6. Create a new Pull Request
 
 ## License
 

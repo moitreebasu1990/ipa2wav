@@ -2,14 +2,18 @@
 
 import os
 import sys
-import pytest
+from pathlib import Path
+
 import numpy as np
-import tensorflow as tf
+import pytest
+import torch
 
 # Add project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.data_processing.data_load import load_vocab, text_normalize, load_data
-from src.tts_model.hyperparams import Hyperparams as hp
+
+from ipa2wav.data_processing.data_load import load_vocab, text_normalize, load_data
+from ipa2wav.tts_model.hyperparams import Hyperparams as hp
+
 
 class TestDataLoading:
     """Test data loading and preprocessing functions."""
@@ -19,82 +23,70 @@ class TestDataLoading:
         """Sample text for testing."""
         return "həˈləʊ ˈwɜːld"  # "hello world" in IPA
     
-    @pytest.fixture
-    def vocab_path(self, tmp_path):
-        """Create a temporary vocabulary file."""
-        vocab_file = tmp_path / "vocab.txt"
-        vocab_content = "PE sxʃuɒhpjgm̃wŋaɛɪðnzʊbvlɑətirʒɜækʌθɔfId"
-        vocab_file.write_text(vocab_content)
-        return str(vocab_file)
-    
-    def test_text_normalize(self, sample_text):
-        """Test text normalization function."""
-        normalized = text_normalize(sample_text)
-        assert isinstance(normalized, str)
-        assert normalized.strip() != ""
-        assert all(c in hp.vocab for c in normalized)
-    
-    def test_load_vocab(self, vocab_path):
+    def test_load_vocab(self):
         """Test vocabulary loading."""
         char2idx, idx2char = load_vocab()
         
-        # Check mappings are dictionaries
+        # Check type and content
         assert isinstance(char2idx, dict)
         assert isinstance(idx2char, dict)
+        assert len(char2idx) == len(idx2char)
+        assert all(isinstance(k, str) for k in char2idx.keys())
+        assert all(isinstance(v, int) for v in char2idx.values())
         
-        # Check mappings are inverses
+        # Check bidirectional mapping
         for char, idx in char2idx.items():
             assert idx2char[idx] == char
-        
-        # Check special tokens
-        assert 'P' in char2idx  # Padding token
-        assert 'E' in char2idx  # End of string token
     
-    def test_load_data(self, tmp_path):
-        """Test data loading functionality."""
-        # Create sample data file
-        data_file = tmp_path / "test.txt"
-        data_file.write_text("test1|həˈləʊ\ntest2|ˈwɜːld")
+    def test_text_normalize(self, sample_text):
+        """Test text normalization."""
+        normalized = text_normalize(sample_text)
+        
+        # Check type
+        assert isinstance(normalized, str)
+        
+        # Check content
+        assert all(c in hp.vocab for c in normalized)
+        assert len(normalized) > 0
+        
+        # Check specific transformations
+        assert normalized.islower()
+    
+    def test_load_data_train(self, tmp_path):
+        """Test data loading in training mode."""
+        # Create temporary data directory
+        data_dir = tmp_path / "data"
+        data_dir.mkdir()
+        hp.data_dir = str(data_dir)
+        
+        # Create sample transcript
+        transcript = data_dir / "transcript.txt"
+        transcript.write_text("sample.wav|həˈləʊ ˈwɜːld\n")
+        
+        # Create sample audio file
+        sample_audio = data_dir / "sample.wav"
+        sample_audio.touch()
         
         # Test loading
-        texts, text_lengths = load_data(mode="train", data_path=str(data_file))
+        fpaths, texts = load_data(mode="train")
         
-        # Check outputs
+        # Check types and content
+        assert isinstance(fpaths, list)
         assert isinstance(texts, list)
-        assert isinstance(text_lengths, list)
-        assert len(texts) == len(text_lengths)
-        assert all(isinstance(t, np.ndarray) for t in texts)
-        assert all(isinstance(l, int) for l in text_lengths)
+        assert len(fpaths) == len(texts)
+        assert all(isinstance(text, np.ndarray) for text in texts)
     
-    def test_invalid_text_normalize(self):
-        """Test text normalization with invalid input."""
+    def test_load_data_synthesize(self):
+        """Test data loading in synthesis mode."""
+        fpaths, texts = load_data(mode="synthesize")
+        
+        # Check empty lists for synthesis mode
+        assert isinstance(fpaths, list)
+        assert isinstance(texts, list)
+        assert len(fpaths) == 0
+        assert len(texts) == 0
+    
+    def test_invalid_mode(self):
+        """Test error handling for invalid mode."""
         with pytest.raises(ValueError):
-            text_normalize("")
-        
-        with pytest.raises(ValueError):
-            text_normalize(None)
-    
-    def test_batch_generation(self):
-        """Test batch generation functionality."""
-        # Create sample data
-        texts = [np.array([1, 2, 3]), np.array([4, 5, 6])]
-        text_lengths = [3, 3]
-        
-        # Create batch
-        batch = tf.data.Dataset.from_tensor_slices((texts, text_lengths))
-        batch = batch.batch(2)
-        
-        # Check batch properties
-        for text_batch, length_batch in batch:
-            assert text_batch.shape[0] <= 2  # Batch size
-            assert length_batch.shape[0] <= 2
-            assert len(text_batch.shape) == 2  # 2D tensor [batch_size, seq_len]
-    
-    def test_text_length_consistency(self):
-        """Test consistency between text and length values."""
-        texts = [np.array([1, 2, 3]), np.array([4, 5, 6, 7])]
-        text_lengths = [3, 4]
-        
-        # Verify lengths match actual sequence lengths
-        for text, length in zip(texts, text_lengths):
-            assert len(text) == length
+            load_data(mode="invalid")

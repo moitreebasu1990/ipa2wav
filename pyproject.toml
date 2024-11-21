@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "ipa2wav"
+version = "0.1.0"
+description = "Text-to-speech synthesis using IPA symbols"
+authors = ["Your Name <your.email@example.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "ipa2wav" }
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+torch = ">=2.2.0"
+torchaudio = ">=2.2.0"
+numpy = ">=1.24.0"
+scipy = "^1.12.0"
+matplotlib = "^3.8.2"
+flask = "^3.0.0"
+tqdm = "^4.66.1"
+soundfile = "^0.12.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+black = "^24.1.1"
+isort = "^5.13.2"
+mypy = "^1.8.0"
+coverage = "^7.4.1"
+pylint = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pylint]
+max-line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

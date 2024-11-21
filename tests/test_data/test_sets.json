@@ -1,32 +1,22 @@
 {
-    "short": [
-        "həˈləʊ",
-        "wɜːld",
-        "haɪ"
-    ],
-    "medium": [
-        "ðɪs ɪz ə ˈtɛst ˈsɛntəns",
-        "aɪ æm ˈtɔːkɪŋ tuː juː",
-        "ðə ˈkwɪk braʊn fɒks"
-    ],
-    "long": [
-        "ðə ˈkwɪk braʊn fɒks ˈdʒʌmps ˈəʊvə ðə ˈleɪzi dɒg ænd ˈrʌnz əˈweɪ ˈkwɪkli",
-        "ˈwɛlkəm tuː ðə ˈwɜːld əv ˈspiːtʃ ˌsɪnθəˈsɪs ˈjuːzɪŋ ˌaɪ piː ˈeɪ ˈsɪmbəlz",
-        "ðɪs ɪz ə ˈlɒŋ ˈtɛst ˈsɛntəns wɪð ˈmɛni ˈwɜːdz ænd ˈdɪfrənt ˈsaʊndz"
-    ],
-    "complex": [
-        "ˈkɒmplɛks ˌaɪ piː ˈeɪ ˈpætənz wɪð ˈstresd ˈsɪləbəlz",
-        "ˈmʌltɪpəl ˈstɒp ˈkɒnsənənts ɪn ˈsɪŋgəl ˈwɜːd",
-        "ˈdɪfθɒŋz ænd ˈtraɪfθɒŋz ɪn ˈsɪŋgəl ˈfrеɪz"
-    ],
-    "numbers": [
-        "ˈtwɛnti ˈθriː",
-        "wʌn ˈθaʊzənd naɪn ˈhʌndrəd ænd ˈtwɛnti ˈfaɪv",
-        "ðə ˈθɜːd ˈtaɪm"
-    ],
-    "punctuation": [
-        "ˈstɒp. ˈpɔːz, ænd kənˈtɪnjuː!",
-        "ɪz ðɪs ə ˈkwɛstʃən?",
-        "ˈfɜːst, ˈsɛkənd, ænd ˈθɜːd..."
-    ]
+  "test_sets": [
+    {
+      "name": "basic_test",
+      "text_file": "basic_test.txt",
+      "reference_file": "basic_test.wav",
+      "description": "Basic test set with simple IPA sequences"
+    },
+    {
+      "name": "complex_test",
+      "text_file": "complex_test.txt",
+      "reference_file": "complex_test.wav",
+      "description": "Complex test set with challenging IPA patterns"
+    },
+    {
+      "name": "stress_test",
+      "text_file": "stress_test.txt",
+      "reference_file": "stress_test.wav",
+      "description": "Test set focusing on stress patterns"
+    }
+  ]
 }
