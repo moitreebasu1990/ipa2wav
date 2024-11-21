@@ -1,0 +1,32 @@
+{
+    "short": [
+        "həˈləʊ",
+        "wɜːld",
+        "haɪ"
+    ],
+    "medium": [
+        "ðɪs ɪz ə ˈtɛst ˈsɛntəns",
+        "aɪ æm ˈtɔːkɪŋ tuː juː",
+        "ðə ˈkwɪk braʊn fɒks"
+    ],
+    "long": [
+        "ðə ˈkwɪk braʊn fɒks ˈdʒʌmps ˈəʊvə ðə ˈleɪzi dɒg ænd ˈrʌnz əˈweɪ ˈkwɪkli",
+        "ˈwɛlkəm tuː ðə ˈwɜːld əv ˈspiːtʃ ˌsɪnθəˈsɪs ˈjuːzɪŋ ˌaɪ piː ˈeɪ ˈsɪmbəlz",
+        "ðɪs ɪz ə ˈlɒŋ ˈtɛst ˈsɛntəns wɪð ˈmɛni ˈwɜːdz ænd ˈdɪfrənt ˈsaʊndz"
+    ],
+    "complex": [
+        "ˈkɒmplɛks ˌaɪ piː ˈeɪ ˈpætənz wɪð ˈstresd ˈsɪləbəlz",
+        "ˈmʌltɪpəl ˈstɒp ˈkɒnsənənts ɪn ˈsɪŋgəl ˈwɜːd",
+        "ˈdɪfθɒŋz ænd ˈtraɪfθɒŋz ɪn ˈsɪŋgəl ˈfrеɪz"
+    ],
+    "numbers": [
+        "ˈtwɛnti ˈθriː",
+        "wʌn ˈθaʊzənd naɪn ˈhʌndrəd ænd ˈtwɛnti ˈfaɪv",
+        "ðə ˈθɜːd ˈtaɪm"
+    ],
+    "punctuation": [
+        "ˈstɒp. ˈpɔːz, ænd kənˈtɪnjuː!",
+        "ɪz ðɪs ə ˈkwɛstʃən?",
+        "ˈfɜːst, ˈsɛkənd, ænd ˈθɜːd..."
+    ]
+}

@@ -1,0 +1,10 @@
+numpy>=1.19.2
+tensorflow>=2.4.1
+librosa>=0.8.1
+soundfile>=0.10.3.post1
+tqdm>=4.62.3
+pesq>=0.0.3
+pystoi>=0.3.3
+psutil>=5.8.0
+matplotlib>=3.4.3
+scipy>=1.7.1
